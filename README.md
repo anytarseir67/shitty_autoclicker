@@ -17,5 +17,5 @@
 #### (this assumes you are using visual studio)
 > ### [add opencv to your projects config](https://towardsdatascience.com/install-and-configure-opencv-4-2-0-in-windows-10-vc-d132c52063a1)
 > ### add opencv_world453d.dll to the build directory (eg: add to {user}/source/repos/{project name}/x64/Debug)
-#### the dll is included in the repo, but i felt it should be mentioned anyway.
+#### the dll, config, and binaries are included in the repo, but i felt it should be mentioned anyway.
 > ### try to compile and remember why you main langs with standardized package managers
