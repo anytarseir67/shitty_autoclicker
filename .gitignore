@@ -42,3 +42,6 @@
 *.idb
 *.pdb
 *.ilk
+
+*.png
+*.jpg
