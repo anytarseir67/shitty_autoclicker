@@ -142,6 +142,7 @@ int main(int argc, char* argv[])
     std::thread _screnshot;
     std::thread _template_pos;
     std::thread _toggle(toggle);
+    int click_interval = 15;
     int x_pos, y_pos;
     for (int i = 1; i < argc; i++)
     {
@@ -168,7 +169,10 @@ int main(int argc, char* argv[])
             key_mode = true;
             key = strtoul(argv[i + 1], NULL, 16);
             std::cout << "key mode." << std::endl;
-            break;
+        }
+        else if (strcmp(argv[i], "-i") == 0)
+        {
+            click_interval = atoi(argv[i + 1]);
         }
     }
     while (1)
@@ -207,7 +211,7 @@ int main(int argc, char* argv[])
             {
                 mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
             }
-            Sleep(15);
+            Sleep(click_interval);
         }
     }
     return 0;
