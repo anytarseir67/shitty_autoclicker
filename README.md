@@ -3,16 +3,18 @@
 * #### the ability to search for a given template and click on it (-t)
 * #### the ability to lock to a given position (-p)
 * #### the ability to press keys instead of mouse buttons (-k)
+* #### clicking the mouse and a key at the same time
 * #### variable click speed (-i)
 ## Usage:
 > ### toggle on and off with F6
 > ### kill with F7
 ## CMD args:
-> ### -t [template image filepath]
-> ### -p [x cord] [y cord]
+> ### -t [template image filepath] (mouse automatically enabled)
+> ### -p [x cord] [y cord] (mouse automatically enabled)
 #### when both a position and a template is passed, the autoclicker will prioritize the template and only use the position when the template can not be found on screen.
 > ### -k [win32 virtual-key code]
 > ### -i [interval between clicks in milliseconds] default is 15
+> ### -km [win32 virtual-key code] same as -k, but with the mouse enabled
 ## Setup:
 #### (this assumes you are using visual studio)
 > ### [add opencv to your projects config](https://towardsdatascience.com/install-and-configure-opencv-4-2-0-in-windows-10-vc-d132c52063a1)

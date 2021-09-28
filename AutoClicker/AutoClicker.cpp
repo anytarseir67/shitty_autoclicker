@@ -8,8 +8,10 @@
 
 std::mutex m;
 std::atomic<bool> active = false;
+bool key_and_mouse = false;
+bool mouse_mode = false;
 bool key_mode = false;
-int key;
+int key = NULL;
 bool pos = false;
 bool _template = false;
 std::atomic<bool> on_screen = false;
@@ -17,6 +19,7 @@ cv::Mat template_img;
 std::atomic<int> temp_x;
 std::atomic<int> temp_y;
 cv::Mat screenshot_img;
+std::string mode_message;
 
 void screenshot(bool loop)
 {
@@ -148,33 +151,75 @@ int main(int argc, char* argv[])
     {
         if (strcmp(argv[i], "-t") == 0)
         {
-           std::string template_path = argv[i+1];
-           load_template(template_path);
-           screenshot(false);
-           _screnshot = std::thread{ screenshot, true };
-           _template_pos = std::thread{ template_pos , true };
-
-           _template = true;
-           std::cout << "template mode." << std::endl;
+            std::string template_path = argv[i + 1];
+            load_template(template_path);
+            screenshot(false);
+            _screnshot = std::thread{ screenshot, true };
+            _template_pos = std::thread{ template_pos , true };
+            mouse_mode = true;
+            _template = true;
         }
         else if (strcmp(argv[i], "-p") == 0)
         {
-            x_pos = atoi(argv[i+1]);
-            y_pos = atoi(argv[i+2]);
+            x_pos = atoi(argv[i + 1]);
+            y_pos = atoi(argv[i + 2]);
+            mouse_mode = true;
             pos = true;
-            std::cout << "position mode." << std::endl;
         }
         else if (strcmp(argv[i], "-k") == 0)
         {
             key_mode = true;
             key = strtoul(argv[i + 1], NULL, 16);
-            std::cout << "key mode." << std::endl;
         }
         else if (strcmp(argv[i], "-i") == 0)
         {
             click_interval = atoi(argv[i + 1]);
         }
+        else if (strcmp(argv[i], "-km") == 0)
+        {
+            key_and_mouse = true;
+            key = strtoul(argv[i + 1], NULL, 16);
+        }
     }
+    if ((key_mode == true && mouse_mode == true) || (key_mode == true && key_and_mouse == true))
+    {
+        key_and_mouse = true;
+        mouse_mode = false;
+        key_mode = false;
+    }
+    else if (key_mode == false && mouse_mode == false && key_and_mouse == false)
+    {
+        mouse_mode = true;
+    }
+    else if ((key_mode == true || key_and_mouse == true) && (key == NULL))
+    {
+        std::cout << "keyboard was enabled, but no key was passed" << std::endl;
+        exit(1);
+    }
+
+    if (key_and_mouse == true)
+    {
+        mode_message = mode_message + "keyboard mouse ";
+    }
+    else if (mouse_mode == true)
+    {
+        mode_message = mode_message + "mouse ";
+    }
+    else if (key_mode == true)
+    {
+        mode_message = mode_message + "keyboard ";
+    }
+
+    if (pos == true)
+    {
+        mode_message = mode_message + "pos ";
+    }
+    if (_template == true)
+    {
+        mode_message = mode_message + "template ";
+    }
+    std::cout << mode_message << "mode" << std::endl;
+
     while (1)
     {
         if (active == true)
@@ -202,13 +247,19 @@ int main(int argc, char* argv[])
                 SetCursorPos(x_pos, y_pos);
             }
        
-            if (key_mode == true)
+            if (mouse_mode == true)
+            {
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            }
+            else if (key_mode == true)
             {
                 keybd_event(key, 0, 0, 0);
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
             }
-            else
+            else if (key_and_mouse == true)
             {
+                keybd_event(key, 0, 0, 0);
+                keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
                 mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
             }
             Sleep(click_interval);
