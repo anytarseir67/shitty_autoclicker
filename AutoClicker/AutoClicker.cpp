@@ -59,7 +59,7 @@ void screenshot(bool loop)
         GetDIBits(hwindowCompatibleDC, hbwindow, 0, height, src.data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
         DeleteObject(hbwindow); DeleteDC(hwindowCompatibleDC); ReleaseDC(hwnd, hwindowDC);
         cv::resize(src, output, cv::Size(src.cols / 2, src.rows / 2), cv::INTER_LINEAR);
-        if (loop == true)
+        if (loop)
         {
             m.lock();
             screenshot_img = output;
@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
             key = strtoul(argv[i + 1], NULL, 16);
         }
     }
-    if ((key_mode == true && mouse_mode == true) || (key_mode == true && key_and_mouse == true))
+    if ((key_mode && mouse_mode) || (key_mode && key_and_mouse))
     {
         key_and_mouse = true;
         mouse_mode = false;
@@ -191,30 +191,30 @@ int main(int argc, char* argv[])
     {
         mouse_mode = true;
     }
-    else if ((key_mode == true || key_and_mouse == true) && (key == NULL))
+    else if ((key_mode || key_and_mouse) && (key == NULL))
     {
         std::cout << "keyboard was enabled, but no key was passed" << std::endl;
         exit(1);
     }
 
-    if (key_and_mouse == true)
+    if (key_and_mouse)
     {
         mode_message = mode_message + "keyboard mouse ";
     }
-    else if (mouse_mode == true)
+    else if (mouse_mode)
     {
         mode_message = mode_message + "mouse ";
     }
-    else if (key_mode == true)
+    else if (key_mode)
     {
         mode_message = mode_message + "keyboard ";
     }
 
-    if (pos == true)
+    if (pos)
     {
         mode_message = mode_message + "pos ";
     }
-    if (_template == true)
+    if (_template)
     {
         mode_message = mode_message + "template ";
     }
@@ -222,17 +222,17 @@ int main(int argc, char* argv[])
 
     while (1)
     {
-        if (active == true)
+        if (active)
         {
-            if (_template == true)
+            if (_template)
             {
-                if (on_screen == true)
+                if (on_screen)
                 {
                     SetCursorPos(temp_x, temp_y);
                 }
                 else
                 {
-                    if (pos == true)
+                    if (pos)
                     {
                         SetCursorPos(x_pos, y_pos);
                     }
@@ -242,21 +242,21 @@ int main(int argc, char* argv[])
                     }
                 }
             }
-            else if (pos == true)
+            else if (pos)
             {
                 SetCursorPos(x_pos, y_pos);
             }
        
-            if (mouse_mode == true)
+            if (mouse_mode)
             {
                 mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
             }
-            else if (key_mode == true)
+            else if (key_mode)
             {
                 keybd_event(key, 0, 0, 0);
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
             }
-            else if (key_and_mouse == true)
+            else if (key_and_mouse)
             {
                 keybd_event(key, 0, 0, 0);
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
