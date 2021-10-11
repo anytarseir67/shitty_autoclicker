@@ -14,8 +14,10 @@
 #### when both a position and a template is passed, the autoclicker will prioritize the template and only use the position when the template can not be found on screen.
 > ### -k [win32 virtual-key code]
 > ### -i [interval between clicks in milliseconds] default is 4
-> ### -km [win32 virtual-key code] same as -k, but with the mouse enabled
-> ### -l enables lower level mouse clicks, these are slower but can interface with more programs
+> ### -km [win32 virtual-key code] (keycode is optional) same as -k, but with the mouse enabled
+> ### -lm enables lower level mouse clicks, these are slower but can interface with more programs
+> ### -lk [win32 virtual-key code] (keycode is optional) enables lower level key strokes, these are slower but can interface with more programs
+> ### -l [win32 virtual-key code] (keycode is optional) enables lower level mouse clicks and key strokes
 ## Setup:
 > ### open AutoClicker.sln in visual stuido
 > ### build 

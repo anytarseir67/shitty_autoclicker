@@ -11,7 +11,8 @@ std::atomic<bool> active = false;
 bool key_and_mouse = false;
 bool mouse_mode = false;
 bool key_mode = false;
-bool low_level = false;
+bool low_level_mouse = false;
+bool low_level_key = false;
 int key = NULL;
 bool pos = false;
 bool _template = false;
@@ -179,11 +180,34 @@ int main(int argc, char* argv[])
         else if (strcmp(argv[i], "-km") == 0)
         {
             key_and_mouse = true;
-            key = strtoul(argv[i + 1], NULL, 16);
+            if (key == NULL)
+            {
+                key = strtoul(argv[i + 1], NULL, 16);
+            }
+        }
+        else if (strcmp(argv[i], "-lm") == 0)
+        {
+            low_level_mouse = true;
+            mouse_mode = true;
+        }
+        else if (strcmp(argv[i], "-lk") == 0)
+        {
+            low_level_key = true;
+            key_mode = true;
+            if (key == NULL)
+            {
+                key = strtoul(argv[i + 1], NULL, 16);
+            }
         }
         else if (strcmp(argv[i], "-l") == 0)
         {
-            low_level = true;
+            low_level_key = true;
+            low_level_mouse = true;
+            key_and_mouse = true;
+            if (key == NULL)
+            {
+                key = strtoul(argv[i + 1], NULL, 16);
+            }
         }
     }
     if ((key_mode && mouse_mode) || (key_mode && key_and_mouse))
@@ -204,15 +228,41 @@ int main(int argc, char* argv[])
 
     if (key_and_mouse)
     {
-        mode_message = mode_message + "keyboard mouse ";
+        if (low_level_mouse && low_level_key)
+        {
+            mode_message = mode_message + "low level keyboard and mouse ";
+        }
+        else if (low_level_mouse)
+        {
+            mode_message = mode_message + "keyboard low level mouse ";
+        }
+        else if (low_level_key)
+        {
+            mode_message = mode_message + "low level keyboard mouse ";
+        }  
     }
     else if (mouse_mode)
     {
-        mode_message = mode_message + "mouse ";
+        if (low_level_mouse)
+        {
+            mode_message = mode_message + "low level mouse ";
+        }
+        else
+        {
+            mode_message = mode_message + "mouse ";
+        }
+        
     }
     else if (key_mode)
     {
-        mode_message = mode_message + "keyboard ";
+        if (low_level_key)
+        {
+            mode_message = mode_message + "low level keyboard ";
+        }
+        else
+        {
+            mode_message = mode_message + "keyboard ";
+        }
     }
 
     if (pos)
@@ -223,10 +273,7 @@ int main(int argc, char* argv[])
     {
         mode_message = mode_message + "template ";
     }
-    if (low_level)
-    {
-        mode_message = mode_message + "low-level ";
-    }
+
     std::cout << mode_message << "mode" << std::endl;
 
     while (1)
@@ -258,7 +305,7 @@ int main(int argc, char* argv[])
        
             if (mouse_mode)
             {
-                if (low_level)
+                if (low_level_mouse)
                 {
                     INPUT Inputs[1] = { 0 };
                     Inputs[0].type = INPUT_MOUSE;
@@ -278,14 +325,46 @@ int main(int argc, char* argv[])
             }
             else if (key_mode)
             {
-                keybd_event(key, 0, 0, 0);
-                keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
+                if (low_level_key)
+                {
+                    INPUT inputs[1] = { 0 };
+                    inputs[0].type = INPUT_KEYBOARD;
+                    inputs[0].ki.wVk = key;
+                    inputs[0].ki.dwFlags = WM_KEYDOWN;
+                    SendInput(1, inputs, sizeof(INPUT));
+                    ZeroMemory(&inputs, sizeof(INPUT));
+                    inputs[0].type = INPUT_KEYBOARD;
+                    inputs[0].ki.wVk = key;
+                    inputs[0].ki.dwFlags = WM_KEYDOWN;
+                    SendInput(1, inputs, sizeof(INPUT));
+                }
+                else
+                {
+                    keybd_event(key, 0, 0, 0);
+                    keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
+                }
             }
             else if (key_and_mouse)
             {
-                keybd_event(key, 0, 0, 0);
-                keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
-                if (low_level)
+                if (low_level_key)
+                {
+                    INPUT inputs[1] = { 0 };
+                    inputs[0].type = INPUT_KEYBOARD;
+                    inputs[0].ki.wVk = key;
+                    inputs[0].ki.dwFlags = WM_KEYDOWN;
+                    SendInput(1, inputs, sizeof(INPUT));
+                    ZeroMemory(&inputs, sizeof(INPUT));
+                    inputs[0].type = INPUT_KEYBOARD;
+                    inputs[0].ki.wVk = key;
+                    inputs[0].ki.dwFlags = WM_KEYDOWN;
+                    SendInput(1, inputs, sizeof(INPUT));
+                }
+                else
+                {
+                    keybd_event(key, 0, 0, 0);
+                    keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
+                }
+                if (low_level_mouse)
                 {
                     INPUT Inputs[1] = { 0 };
                     Inputs[0].type = INPUT_MOUSE;
