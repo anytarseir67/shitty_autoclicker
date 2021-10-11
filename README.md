@@ -13,11 +13,10 @@
 > ### -p [x cord] [y cord] (mouse automatically enabled)
 #### when both a position and a template is passed, the autoclicker will prioritize the template and only use the position when the template can not be found on screen.
 > ### -k [win32 virtual-key code]
-> ### -i [interval between clicks in milliseconds] default is 15
+> ### -i [interval between clicks in milliseconds] default is 4
 > ### -km [win32 virtual-key code] same as -k, but with the mouse enabled
+> ### -l enables lower level mouse clicks, these are slower but can interface with more programs
 ## Setup:
-#### (this assumes you are using visual studio)
-> ### [add opencv to your projects config](https://towardsdatascience.com/install-and-configure-opencv-4-2-0-in-windows-10-vc-d132c52063a1)
-> ### add opencv_world453d.dll to the build directory (eg: add to {user}/source/repos/{project name}/x64/Debug)
-#### the dll, config, and binaries are included in the repo, but i felt it should be mentioned anyway.
-> ### try to compile and remember why you main langs with standardized package managers
+> ### open AutoClicker.sln in visual stuido
+> ### build 
+### use the "Release" build config for better template performance 

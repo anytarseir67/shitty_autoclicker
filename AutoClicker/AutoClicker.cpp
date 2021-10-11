@@ -11,6 +11,7 @@ std::atomic<bool> active = false;
 bool key_and_mouse = false;
 bool mouse_mode = false;
 bool key_mode = false;
+bool low_level = false;
 int key = NULL;
 bool pos = false;
 bool _template = false;
@@ -145,7 +146,7 @@ int main(int argc, char* argv[])
     std::thread _screnshot;
     std::thread _template_pos;
     std::thread _toggle(toggle);
-    int click_interval = 15;
+    int click_interval = 4;
     int x_pos, y_pos;
     for (int i = 1; i < argc; i++)
     {
@@ -179,6 +180,10 @@ int main(int argc, char* argv[])
         {
             key_and_mouse = true;
             key = strtoul(argv[i + 1], NULL, 16);
+        }
+        else if (strcmp(argv[i], "-l") == 0)
+        {
+            low_level = true;
         }
     }
     if ((key_mode && mouse_mode) || (key_mode && key_and_mouse))
@@ -218,6 +223,10 @@ int main(int argc, char* argv[])
     {
         mode_message = mode_message + "template ";
     }
+    if (low_level)
+    {
+        mode_message = mode_message + "low-level ";
+    }
     std::cout << mode_message << "mode" << std::endl;
 
     while (1)
@@ -249,7 +258,23 @@ int main(int argc, char* argv[])
        
             if (mouse_mode)
             {
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                if (low_level)
+                {
+                    INPUT Inputs[1] = { 0 };
+                    Inputs[0].type = INPUT_MOUSE;
+                    Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                    SendInput(1, Inputs, sizeof(INPUT));
+                    Sleep(1);
+                    ZeroMemory(&Inputs, sizeof(INPUT));
+                    Inputs[0].type = INPUT_MOUSE;
+                    Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+                    SendInput(1, Inputs, sizeof(INPUT));
+                }
+                else
+                {
+                    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                }
+
             }
             else if (key_mode)
             {
@@ -260,7 +285,22 @@ int main(int argc, char* argv[])
             {
                 keybd_event(key, 0, 0, 0);
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                if (low_level)
+                {
+                    INPUT Inputs[1] = { 0 };
+                    Inputs[0].type = INPUT_MOUSE;
+                    Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                    SendInput(1, Inputs, sizeof(INPUT));
+                    Sleep(1);
+                    ZeroMemory(&Inputs, sizeof(INPUT));
+                    Inputs[0].type = INPUT_MOUSE;
+                    Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+                    SendInput(1, Inputs, sizeof(INPUT));
+                }
+                else
+                {
+                    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                }
             }
             Sleep(click_interval);
         }
