@@ -18,6 +18,7 @@
 > ### -lm enables lower level mouse clicks, these are slower but can interface with more programs
 > ### -lk [win32 virtual-key code] (keycode is optional) enables lower level key strokes, these are slower but can interface with more programs
 > ### -l [win32 virtual-key code] (keycode is optional) enables lower level mouse clicks and key strokes
+> ### -o when present, set the autoclicker to enabled by default (otherwise disabled by default)
 ## Setup:
 > ### open AutoClicker.sln in visual stuido
 > ### build 

@@ -209,6 +209,11 @@ int main(int argc, char* argv[])
                 key = strtoul(argv[i + 1], NULL, 16);
             }
         }
+        else if (strcmp(argv[i], "-o") == 0)
+        {
+            active = true;
+            std::cout << "`-o` passed, clicking enabled by default, press F6 to disable." << std::endl;
+        }
     }
     if ((key_mode && mouse_mode) || (key_mode && key_and_mouse))
     {
