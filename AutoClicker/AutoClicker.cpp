@@ -336,15 +336,10 @@ int main(int argc, char* argv[])
                     inputs.type = INPUT_KEYBOARD;
                     inputs.ki.wVk = key;
                     inputs.ki.dwFlags = 0;
-                    inputs.ki.wScan = 0; // hardware scan code for key
+                    inputs.ki.wScan = 0;
                     inputs.ki.time = 0;
                     inputs.ki.dwExtraInfo = 0;
                     SendInput(1, &inputs, sizeof(INPUT));
-                //    ZeroMemory(&inputs, sizeof(INPUT));
-                //    inputs[0].type = INPUT_KEYBOARD;
-                //    inputs[0].ki.wVk = key;
-                //    inputs[0].ki.dwFlags = WM_KEYUP;
-                //    SendInput(1, inputs, sizeof(INPUT));
                 }
                 else
                 {
